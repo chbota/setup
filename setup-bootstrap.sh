@@ -106,7 +106,7 @@ install_yadm() {
             else
                 # Fallback to curl install
                 print_info "Installing yadm via curl..."
-                curl -fLo ~/.local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+                curl -fLo ~/.local/bin/yadm https://github.com/yadm-dev/yadm/raw/master/yadm
                 chmod +x ~/.local/bin/yadm
             fi
             ;;
@@ -116,7 +116,7 @@ install_yadm() {
             else
                 print_info "Installing yadm via curl..."
                 mkdir -p ~/.local/bin
-                curl -fLo ~/.local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+                curl -fLo ~/.local/bin/yadm https://github.com/yadm-dev/yadm/raw/master/yadm
                 chmod +x ~/.local/bin/yadm
                 export PATH="$HOME/.local/bin:$PATH"
             fi
@@ -124,7 +124,7 @@ install_yadm() {
         "windows")
             print_info "Installing yadm via curl..."
             mkdir -p ~/.local/bin
-            curl -fLo ~/.local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+            curl -fLo ~/.local/bin/yadm https://github.com/yadm-dev/yadm/raw/master/yadm
             chmod +x ~/.local/bin/yadm
             export PATH="$HOME/.local/bin:$PATH"
             ;;
