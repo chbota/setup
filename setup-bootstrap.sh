@@ -183,7 +183,8 @@ setup_yadm_repo() {
 
     yadm gitconfig alias.restoreSettings '!git diff --stat @~1'
     yadm gitconfig alias.backupSettings '!git diff --stat @~1'
-
+    yadm checkout .gitconfig
+    
     print_success "yadm repository setup completed"
 }
 
