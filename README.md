@@ -49,18 +49,6 @@ The bootstrap script will:
 4. **Clone the setup-internal repository** via yadm
 5. **Run platform-specific bootstrap scripts** from the yadm repository
 
-## PowerShell Script Parameters (Windows)
-
-The PowerShell version supports additional parameters:
-
-```powershell
-# Skip GitHub authentication (useful for CI/automated setups)
-.\setup-bootstrap.ps1 -SkipAuth
-
-# Force reinstallation of tools
-.\setup-bootstrap.ps1 -Force
-```
-
 ## Prerequisites
 
 ### All Platforms
@@ -121,14 +109,6 @@ If the automated script doesn't work, you can install components manually:
 2. **Install yadm**: https://yadm.io/docs/install
 3. **Authenticate**: `gh auth login`
 4. **Clone dotfiles**: `yadm clone https://github.com/chbota/setup-internal.git`
-
-## Security Note
-
-This script downloads and executes code from the internet. Only run it if you trust the source. You can inspect the script first:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/chbota/setup/main/setup-bootstrap.sh
-```
 
 ## Support
 
