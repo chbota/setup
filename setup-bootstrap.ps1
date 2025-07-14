@@ -144,12 +144,7 @@ function Install-Git {
 }
 
 # Function to install yadm
-function Install-Yadm {
-    if (Test-Command "yadm") {
-        Write-Info "yadm already installed"
-        return
-    }
-    
+function Install-Yadm {    
     Write-Info "Installing yadm..."
     try {
         # Create local bin directory
@@ -357,14 +352,6 @@ function Main {
     Write-Success "Bootstrap setup completed successfully!"
     Write-Info "Your development environment is now ready."
     Write-Info "You may need to restart your terminal to reload environment variables."
-    
-    # Offer to restart terminal
-    $restart = Read-Host "Would you like to restart your terminal now? (y/N)"
-    if ($restart -eq 'y' -or $restart -eq 'Y') {
-        Write-Info "Restarting terminal..."
-        Start-Process -FilePath "powershell" -ArgumentList "-NoExit", "-Command", "cd '$PWD'"
-        exit 0
-    }
 }
 
 # Run main function only if script is executed directly (not dot-sourced)
