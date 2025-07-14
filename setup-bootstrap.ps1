@@ -85,7 +85,7 @@ function Install-Winget {
     catch {
         Write-Error "Failed to install winget: $_"
         Write-Info "Please install winget manually from the Microsoft Store or GitHub"
-        exit 1
+        return
     }
 }
 
@@ -112,7 +112,7 @@ function Install-GitHubCLI {
     catch {
         Write-Error "Failed to install GitHub CLI: $_"
         Write-Info "Please install manually with: winget install GitHub.cli"
-        exit 1
+        return
     }
 }
 
@@ -139,7 +139,7 @@ function Install-Git {
     catch {
         Write-Error "Failed to install Git: $_"
         Write-Info "Please install manually with: winget install Git.Git"
-        exit 1
+        return
     }
 }
 
@@ -198,11 +198,11 @@ if (Test-Path `$yadmScript) {
         & `$bashPath `$yadmScript @args
     } else {
         Write-Error "Git bash not found. Please install Git for Windows."
-        exit 1
+        return
     }
 } else {
     Write-Error "yadm script not found at: `$yadmScript"
-    exit 1
+    return
 }
 "@
         Set-Content -Path $yadmPs1 -Value $ps1Content -Encoding UTF8
@@ -218,7 +218,7 @@ if (Test-Path `$yadmScript) {
     }
     catch {
         Write-Error "Failed to install yadm: $_"
-        exit 1
+        return
     }
 }
 
@@ -252,7 +252,7 @@ function Invoke-GitHubAuth {
     }
     catch {
         Write-Error "GitHub authentication failed: $_"
-        exit 1
+        return
     }
 }
 
@@ -266,7 +266,7 @@ function Set-YadmRepository {
         # Ensure yadm command is available
         if (!(Test-Command "yadm")) {
             Write-Error "yadm command not found. Installation may have failed."
-            exit 1
+            return
         }
         
         # Check if yadm repo is already cloned
@@ -290,7 +290,7 @@ function Set-YadmRepository {
         Write-Error "Failed to setup yadm repository: $_"
         Write-Info "You may need to run these commands manually:"
         Write-Info "  yadm clone $repoUrl"
-        exit 1
+        return
     }
 }
 
@@ -301,7 +301,7 @@ function Main {
     # Check if running on Windows
     if ($PSVersionTable.Platform -and $PSVersionTable.Platform -ne "Win32NT") {
         Write-Error "This script is designed for Windows. Use the bash version for Linux/macOS."
-        exit 1
+        return
     }
     
     # Check for administrator privileges for some operations
@@ -323,7 +323,7 @@ function Main {
     if (!(Test-Command "git")) {
         Write-Error "Git installation failed or not in PATH"
         Write-Info "Please restart your terminal and try again"
-        exit 1
+        return
     }
     
     # Install yadm
@@ -347,6 +347,6 @@ if ($MyInvocation.InvocationName -ne '.') {
     }
     catch {
         Write-Error "Script failed: $_"
-        exit 1
+        return
     }
 } 
