@@ -177,6 +177,8 @@ setup_yadm_repo() {
         yadm clone "$repo_url"
     fi
     
+    yadm bootstrap
+
     print_success "yadm repository setup completed"
 }
 

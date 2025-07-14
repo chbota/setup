@@ -242,15 +242,7 @@ function Invoke-Bootstrap {
     Write-Info "Running platform-specific bootstrap scripts..."
     
     try {
-        # Check if Windows bootstrap script exists
-        $bootstrapScript = "$env:USERPROFILE\.config\yadm\bootstrap.d\bootstrap_windows.ps1"
-        if (Test-Path $bootstrapScript) {
-            Write-Info "Running Windows bootstrap script..."
-            & $bootstrapScript
-            Write-Success "Windows bootstrap completed"
-        } else {
-            Write-Warning "Windows bootstrap script not found at: $bootstrapScript"
-        }
+        yadm bootstrap
     }
     catch {
         Write-Error "Bootstrap script failed: $_"
