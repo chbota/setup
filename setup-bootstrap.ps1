@@ -271,7 +271,11 @@ function Set-YadmRepository {
         
         # Check if yadm repo is already cloned
         Write-Info "Checking for existing yadm repository..."
-        $yadmStatus = & yadm status 2>&1
+        try {
+            $yadmStatus = & yadm status 2>&1
+        } catch {
+        }
+
         if ($LASTEXITCODE -eq 0) {
             Write-Warning "yadm repository already exists. Pulling latest changes..."
             & yadm pull
