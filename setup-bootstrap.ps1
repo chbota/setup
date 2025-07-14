@@ -285,7 +285,8 @@ function Set-YadmRepository {
             Write-Info "Cloning yadm repository..."
             & yadm clone $repoUrl
         }
-        
+
+        & yadm config local.class Windows
         & yadm gitconfig alias.restoreSettings '!git diff --stat @~1'
         & yadm gitconfig alias.backupSettings '!git diff --stat @~1'
         
