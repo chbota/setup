@@ -281,6 +281,9 @@ function Set-YadmRepository {
             & yadm clone $repoUrl
         }
         
+        & yadm gitconfig alias.restoreSettings '!git diff --stat @~1'
+        & yadm gitconfig alias.backupSettings '!git diff --stat @~1'
+        
         Write-Success "yadm repository setup completed"
     }
     catch {

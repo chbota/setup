@@ -178,6 +178,9 @@ setup_yadm_repo() {
         yadm clone "$repo_url"
     fi    
 
+    yadm gitconfig alias.restoreSettings '!git diff --stat @~1'
+    yadm gitconfig alias.backupSettings '!git diff --stat @~1'
+
     print_success "yadm repository setup completed"
 }
 
