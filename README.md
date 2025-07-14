@@ -19,36 +19,6 @@ curl -fsSL https://raw.githubusercontent.com/chbota/setup/main/setup-bootstrap.s
 irm https://raw.githubusercontent.com/chbota/setup/main/setup-bootstrap.ps1 | iex
 ```
 
-
-### Local Execution
-
-If you've already cloned the repository:
-
-#### Windows (PowerShell):
-```powershell
-cd setup
-.\setup-bootstrap.ps1
-```
-
-#### Linux/macOS/WSL:
-```bash
-cd setup
-chmod +x setup-bootstrap.sh
-./setup-bootstrap.sh
-```
-
-## What the Script Does
-
-The bootstrap script will:
-
-1. **Detect your operating system** (Linux, macOS, Windows)
-2. **Install required tools**:
-   - **Windows**: winget (if missing), Git, GitHub CLI, yadm
-   - **Linux/macOS**: GitHub CLI, yadm
-3. **Authenticate with GitHub** (interactive login)
-4. **Clone the setup-internal repository** via yadm
-5. **Run platform-specific bootstrap scripts** from the yadm repository
-
 ## Prerequisites
 
 ### All Platforms
@@ -63,10 +33,12 @@ The bootstrap script will:
 
 ### Linux
 - `curl` or `wget`
+- `git`
 - Package manager (`apt`, `yum`, `dnf`, or `pacman`)
 
 ### macOS
 - `curl` (pre-installed)
+- `git` (pre-installed)
 - Homebrew (optional, will be used if available)
 
 ## Troubleshooting
