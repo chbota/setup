@@ -159,6 +159,7 @@ authenticate_github() {
         gh auth login
     fi
 
+    print_info "Configuring git to use GH auth helper"
     gh auth setup-git
     
     print_success "GitHub authentication completed"
