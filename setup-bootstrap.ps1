@@ -158,10 +158,59 @@ function Install-Yadm {
             New-Item -ItemType Directory -Path $localBin -Force | Out-Null
         }
         
-        # Download yadm
-        $yadmPath = "$localBin\yadm"
+        # Download yadm script
+        $yadmScript = "$localBin\yadm"
         $progressPreference = 'silentlyContinue'
-        Invoke-WebRequest -Uri "https://github.com/yadm-dev/yadm/raw/master/yadm" -OutFile $yadmPath
+        Invoke-WebRequest -Uri "https://github.com/yadm-dev/yadm/raw/master/yadm" -OutFile $yadmScript
+        
+        # Create Windows batch wrapper that uses Git's bash
+        $yadmBat = "$localBin\yadm.bat"
+        $batContent = @"
+@echo off
+setlocal
+set "YADM_SCRIPT=$yadmScript"
+if exist "%ProgramFiles%\Git\bin\bash.exe" (
+    "%ProgramFiles%\Git\bin\bash.exe" "%YADM_SCRIPT%" %*
+) else if exist "%ProgramFiles(x86)%\Git\bin\bash.exe" (
+    "%ProgramFiles(x86)%\Git\bin\bash.exe" "%YADM_SCRIPT%" %*
+) else (
+    echo Error: Git bash not found. Please install Git for Windows.
+    exit /b 1
+)
+"@
+        Set-Content -Path $yadmBat -Value $batContent -Encoding ASCII
+        
+        # Also create PowerShell wrapper as fallback
+        $yadmPs1 = "$localBin\yadm.ps1"
+        $ps1Content = @"
+`$yadmScript = "$yadmScript"
+if (Test-Path `$yadmScript) {
+    # Try to find Git bash
+    `$gitBashPaths = @(
+        "`${env:ProgramFiles}\Git\bin\bash.exe",
+        "`${env:ProgramFiles(x86)}\Git\bin\bash.exe"
+    )
+    
+    `$bashPath = `$null
+    foreach (`$path in `$gitBashPaths) {
+        if (Test-Path `$path) {
+            `$bashPath = `$path
+            break
+        }
+    }
+    
+    if (`$bashPath) {
+        & `$bashPath `$yadmScript @args
+    } else {
+        Write-Error "Git bash not found. Please install Git for Windows."
+        exit 1
+    }
+} else {
+    Write-Error "yadm script not found at: `$yadmScript"
+    exit 1
+}
+"@
+        Set-Content -Path $yadmPs1 -Value $ps1Content -Encoding UTF8
         
         # Add to PATH if not already there
         $userPath = [System.Environment]::GetEnvironmentVariable("PATH", "User")
@@ -219,20 +268,29 @@ function Set-YadmRepository {
     $repoUrl = "https://github.com/chbota/setup-internal.git"
     
     try {
+        # Ensure yadm command is available
+        if (!(Test-Command "yadm")) {
+            Write-Error "yadm command not found. Installation may have failed."
+            exit 1
+        }
+        
         # Check if yadm repo is already cloned
-        $yadmStatus = yadm status 2>&1
+        Write-Info "Checking for existing yadm repository..."
+        $yadmStatus = & yadm status 2>&1
         if ($LASTEXITCODE -eq 0) {
             Write-Warning "yadm repository already exists. Pulling latest changes..."
-            yadm pull
+            & yadm pull
         } else {
             Write-Info "Cloning yadm repository..."
-            yadm clone $repoUrl
+            & yadm clone $repoUrl
         }
         
         Write-Success "yadm repository setup completed"
     }
     catch {
         Write-Error "Failed to setup yadm repository: $_"
+        Write-Info "You may need to run these commands manually:"
+        Write-Info "  yadm clone $repoUrl"
         exit 1
     }
 }
@@ -242,11 +300,13 @@ function Invoke-Bootstrap {
     Write-Info "Running platform-specific bootstrap scripts..."
     
     try {
-        yadm bootstrap
+        Write-Info "Executing yadm bootstrap..."
+        & yadm bootstrap
+        Write-Success "Bootstrap completed successfully"
     }
     catch {
         Write-Error "Bootstrap script failed: $_"
-        Write-Warning "You may need to run the bootstrap script manually"
+        Write-Warning "You may need to run 'yadm bootstrap' manually"
     }
 }
 
@@ -274,6 +334,13 @@ function Main {
     
     # Install GitHub CLI
     Install-GitHubCLI
+    
+    # Verify Git is working
+    if (!(Test-Command "git")) {
+        Write-Error "Git installation failed or not in PATH"
+        Write-Info "Please restart your terminal and try again"
+        exit 1
+    }
     
     # Install yadm
     Install-Yadm
