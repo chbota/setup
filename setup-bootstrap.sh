@@ -158,6 +158,8 @@ authenticate_github() {
         print_info "Starting GitHub authentication..."
         gh auth login
     fi
+
+    gh auth setup-git
     
     print_success "GitHub authentication completed"
 }
