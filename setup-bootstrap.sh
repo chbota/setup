@@ -172,12 +172,11 @@ setup_yadm_repo() {
     if yadm status >/dev/null 2>&1; then
         print_warning "yadm repository already exists. Pulling latest changes..."
         yadm pull
+        yadm bootstrap
     else
         print_info "Cloning yadm repository..."
         yadm clone "$repo_url"
-    fi
-    
-    yadm bootstrap
+    fi    
 
     print_success "yadm repository setup completed"
 }

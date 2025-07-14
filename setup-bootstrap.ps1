@@ -275,6 +275,7 @@ function Set-YadmRepository {
         if ($LASTEXITCODE -eq 0) {
             Write-Warning "yadm repository already exists. Pulling latest changes..."
             & yadm pull
+            & yadm bootstrap
         } else {
             Write-Info "Cloning yadm repository..."
             & yadm clone $repoUrl
@@ -287,21 +288,6 @@ function Set-YadmRepository {
         Write-Info "You may need to run these commands manually:"
         Write-Info "  yadm clone $repoUrl"
         exit 1
-    }
-}
-
-# Function to run bootstrap scripts
-function Invoke-Bootstrap {
-    Write-Info "Running platform-specific bootstrap scripts..."
-    
-    try {
-        Write-Info "Executing yadm bootstrap..."
-        & yadm bootstrap
-        Write-Success "Bootstrap completed successfully"
-    }
-    catch {
-        Write-Error "Bootstrap script failed: $_"
-        Write-Warning "You may need to run 'yadm bootstrap' manually"
     }
 }
 
@@ -345,9 +331,6 @@ function Main {
     
     # Setup yadm repository
     Set-YadmRepository
-    
-    # Run bootstrap scripts
-    Invoke-Bootstrap
     
     Write-Success "Bootstrap setup completed successfully!"
     Write-Info "Your development environment is now ready."
